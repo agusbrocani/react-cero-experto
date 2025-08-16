@@ -1,0 +1,58 @@
+¿Qué es React?
+    Biblioteca para construir interfaces de usuario.
+
+¿Qué problema resuelve?
+    Manipular el DOM
+    Código dificil de mantener en JS
+    Estructura poco clara
+
+Sintaxis JSX/TSX: sugar sintax, combinación entre HTML y JS/TS
+Permite crear componentes reutilizables
+DOM Virtual => es lo que actualiza el DOM Real. Solo renderiza lo que necesita.
+
+Estructura de un componente:
+    - Es una función (puede o no recibir props)
+    - retorna un HTML
+    - opcional: 
+        - tener un state (mediante un Hook)
+            Hook: función que permite mantener un estado.
+                Lo almacena.
+                Lo modifica.
+        - tener funciones controladoras (handlers)
+
+Props: información que recibe un componente.
+
+¿Porqué es popular? => porque las versiones viejas siguen pudiendo mantenerse a pesar de las nuevas versiones.
+
+Como NO es un Framework => tengo que utilizar recursos adicionales. No me impone la manera de construir las interfaces.
+    - Sistemas de reutilizables
+    - Peticiones HTTP
+    - Testing
+Queda BAJO MI RESPONSABILIDAD asegurar compatibilidad.
+SOLUCIÓN: usar un Framework de React.
+
+Según como lo uso:
+    ¿Biblioteca?    => uso Vite
+        ¿Rutas?
+            => React Router
+            => Tanstack Router
+        ¿Data fetching?
+            => React Query
+            => SWR
+            => RTK Query
+    ¿Framework?     => uso Next.js
+                    => React Router (v7)
+                    => Expo (for native apps)
+
+TypeScript: superset de JS.
+    Lo necesito para usar frameworks. 
+        ej.: Next.js (Server Side) o Expo (React Navite)
+
+Ventajas:
+    Detección de errores en tiempo de desarrollo
+    Mejor documentación del código (solo leyendo los tipos)
+    Más seguro
+    Intellisense + ayudas del editor
+    Escalable en equipos
+
+RESUMEN: permite modelar una interfaz compleja con piezas pequeñas y reutilizables.

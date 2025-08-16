@@ -1,0 +1,470 @@
+Crear proyecto básico:
+
+npm create vite
+01-reforzamiento
+Vanilla
+TypeScript
+
+cd 01-reforzamiento
+npm install
+npm run dev
+
+Estructura del proyecto:
+    - node_modules: son dependencias de desarrollo, no llegan a producción
+    - public
+    - src
+    - .gitignore
+    - index.html
+        => donde se monta la App de React
+    - package-lock.json
+        => instrucción de cómo fue construido el módulo de Node.
+    - package.json
+        "name"    : "reforzamiento"
+        "private" : true 
+        "version" : 0.0.0
+        "type"    : "module"
+            - Indica que se debe tratar el código JS/TS como módulos ECMAScript (ESM) en lugar de usar el sistema clásico de módulos CommonJS (CJS).
+        
+        "scripts"
+            => "dev"    : "vite"
+                - Levanta un servidor de desarrollo
+            => "build"  : "tsc && vite build"
+                - Genera la versión optimizada y lista para subir a producción
+            => "preview": "vite preview"
+                - Sirve para levantar un servidor local que muestra exactamente lo que generó el build.
+                - No recompila el código, solo sirve el contenido ya empaquetado desde dist/.
+                - Es útil para revisar cómo se verá en producción antes de subirlo
+            => "test"   : ejecuta archivos de test
+        => devDependencies  : son dependencias de producción
+        => dependencies     : son dependencias de producción
+    - tsconfig.json
+        Archivo de configuración de TypeScript. Cómo quiero que trabaje en el proyecto.
+        Hay comandos de Linting => qué tan estricto quiero que sea TypeScript
+            "strict": true,
+                Si uso un código que usa 'Any'
+            "noUnusedLocals": true,
+                Si tengo variables y no las uso => ERROR
+            "noUnusedParameters": true,
+                Si tengo argumentos y no los uso => ERROR
+            "erasableSyntaxOnly": true,
+            "noFallthroughCasesInSwitch": true,
+            "noUncheckedSideEffectImports": true
+
+1- Crear carpeta bases
+2- Empezar a crear los .ts
+3- Hacer import en main.ts
+    ej.: import './bases/01-const-let';
+
+Curiosidades: 
+    {nombreVariable} => veo el nombre y el valor
+    cadena1.includes(cadena2);     => true o false si pertenece el substring
+    "O'neal \"es el apellido de alguien\""  => con \ puedo poner caracteres reservados, lo escapo.
+        SOLUCIÓN: usar template strings`. `Puedo crear cadenas multilinea y con variables ${comoEsta}`
+
+Object Literal
+    const person = {
+        name: 'Tony',
+        lastName: 'Stark',
+        age: 45
+    };
+
+    Puedo cambiar valor de las propiedades pero NO del objeto.
+        ej.: person.name = 'Agustin';
+
+SHORTCUT: F2 sobre una variable => RENOMBRARLA
+
+    PROBLEMA: shallow copy => misma referencia al objeto que la otra variable.
+        const ironman = {
+            name: 'Tony',
+            lastName: 'Stark',
+            age: 45
+        };
+
+        // Shallow copy
+        const spiderman = ironman;
+            SOLUCIÓN: usar el Spread Operator. 
+                const spiderman = {...ironman};
+                IMPORTANTE: SOLO FUNCIONA con el nivel 0 de profundidad.
+                ¿Porqué?
+                    Porque si hay un objeto o array, copia la referencia.
+                    SOLUCION DEFINITIVA: Deep copy con la función structuredClone.
+                        const spiderman = structuredClone(ironman);
+
+        ironman.name = 'Peter';
+        ironman.lastName = 'Parker';
+        ironman.age = 22;
+
+        console.log(ironman);
+        console.log(spiderman);
+
+Interfaces: definir tipos. Como NO existen en JS, equivalen a 0 líneas de código al transpilar.
+    Convention: PascalCase.
+
+    SHORTCUT: declarar variable objeto y usar CONTROL + . y elegir "Add missing properties".
+        ej.: const spiderman: Person = {};  // posiciono cursor sobre spiderman y presiono CONTROL + .
+    IMPORTANTE: puedo repetir N veces el proceso para objetos anidados (siempre y cuando haya definido una interfaz).
+
+Arrays: generalmente, datos que tienen algo en común.
+    const myArray = [1,2,3,'4',5,6];    // Si no especifico tipo, toma number | string => PUEDE CAUSAR ERRORES más adelante.
+    SOLUCIÓN: const myArray: number = [1,2,3];  // otro tipo, da error.
+
+    const myArray: number[] = [1,2,3,4,5,6];
+    myArray.push(7);
+
+    Shallow copy
+        // const myArray2 = myArray;
+    SOLUCIÓN solo para tipos básicos
+        // const myArray2 = [...myArray];
+    Deep copy: SOLUCIÓN DEFINITIVA
+    const myArray2 = structuredClone(myArray);
+    console.log({myArray, myArray2});
+
+    const myArray: (number | string) = [];  // si quiero más de 1 tipo, pero NO ES RECOMENDABLE
+
+Funciones: siempre definir el tipo e idealmente usar arrow functions.
+    Tradicional:
+        function greet(name: string): string {
+            return `Hola ${name}`;
+        }
+        Desventaja: en JS se puede reasignar.
+        greet = function () {
+            return 'Hola Agustin';
+        }
+
+    Arrow function:
+        Ventaja: no cambia a lo que apunta el objeto this.
+        
+        Explicit return
+        const greet2 = (name: string): string => {
+            return `Hola ${name}`;
+        }
+
+        Implicit return: es conveniente usar () en algunos casos.
+        const greet3 = (name: string): string => `Hola ${name}`;
+
+    myArray.forEach(callback)
+        ¿Como funciona? pasa en orden directamente los 3 parametros a lo que yo envie como callback
+        callback(value, index, array) => console.log(value, index, array);
+    ej.: 
+        myNumbers.forEach((value) => console.log(value));
+        myNumbers.forEach(console.log); // console.log recibe los 3 parametros y los muestra en consola.
+
+Object destructuring: desarmo un OBJETO extrayendo sus propiedades en variables (el valor de la prop puede ser una función).
+    Para OBJETOS => NO IMPORTA EL ÓRDEN en que lo haga.
+    IMPORTANTE: no puedo tener 2 desestructuraciones con el mismo nombre en el mismo archivo.
+
+    const person = {
+        name: 'Tony',
+        age: 45,
+        key: 'Ironman'
+    };
+    Sin object destructuring:
+        const name = person.name;
+        const age = person.age;
+        const key = person.key;
+
+    Con object destructuring:
+        const {key, age, name} = person;
+
+    console.log({name, age, key});
+
+    IMPORTANTE: OMITIR EL NOMBRE de una prop si tengo una variable con el mismo nombre.
+        const useContext = (hero: Hero) => {
+            const {age, key, name, rank = 'Sin rango'} = hero;
+            return {
+                keyName: name,
+                user: {
+                    age,    // en vez de age: age,
+                    key     // en vez de key: key,
+                },
+                rank
+            };
+        };
+    
+    IMPORTANTE: cuando quiero desestructurar propiedades de un objeto anidado.
+    ej.: user: {name, age} siendo user un objeto dentro del objeto retorno de useContext.
+    IMPORTANTE: puedo ponerle un alias a una prop. 
+    ej.: llamo key a keyName.   
+        const {keyName: key, user: {name, age}, rank} = useContext(person);
+        console.log({key, name, age, rank});
+    
+    NO ES RECOMENDADA ESA FORMA de desestructurar objetos anidados.
+        SOLUCIÓN: desestructuro el objeto anidado en 'user' solamente y abajo, hago otra desestructuración del mismo.
+        
+        const {user} = useContext(person);
+        const {name, age} = user;
+  
+Array destructuring: desarmo un ARRAY extrayendo sus valores en variables (el valor puede ser una función).
+    Para ARRAYS => IMPORTA EL ÓRDEN en que lo haga.
+    IMPORTANTE: no puedo tener 2 desestructuraciones con el mismo nombre en el mismo archivo.
+
+    const characterNames = ['Goku', 'Vegeta', 'Trunks'];
+
+    const [p1,, p3] = characterNames; 
+    const [,,trunks] = characterNames;
+        IMPORTANTE: no ocupo un espacio en memoria dejando el espacio en blanco.
+
+    console.log({p1, p3});  // {p1: 'Goku', p3: 'Trunks'}
+    console.log({trunks});  // {trunks: 'Trunks'}
+
+    Uso de as const: retorna una TUPLA. No importa el tipo de dato que use.
+        const returnsArrayFn = () => {
+            return ['ABC', 123] as const;    // SIEMPRE 1° string y 2° number con el as const => [string, number] es una TUPLA.
+        };
+
+        const [letters, numbers] = returnsArrayFn();
+
+        // con el as const => me permite hacerlo, devuelve una tupla.
+        console.log(letters + 100);
+        console.log(numbers + 100);
+
+Interfaces y enumeraciones:
+    interface Hero {
+        id: number,
+        name: string,
+        owner: Owner
+    };
+
+    Regla
+        type Owner = 'DC' | 'Marvel';
+
+    Enum: crea un objeto
+        enum Owner {
+            DC = 'DC',          // 0 si no defino valor
+            Marvel = 'Marvel'  // 1 si no defino valor
+        };
+
+    IMPORTANTE: interfaces se declaran arriba porque son de mayor jerarquía.
+    IMPORTANTE: usar type para definir valores.
+    IMPORTANTE: usar enum CREA UN OBJETO cuando se transpila a JS.
+        NO PUEDO USARLO si tengo "erasableSyntaxOnly": true en tsconfig.json
+
+IMPORT, EXPORT, FIND, INDEXOF, FILTER:
+    IMPORTANTE: cuando hago un IMPORT, se ejecuta TODO el archivo importado 1 vez.
+
+    EXPORT-IMPORT INDIVIDUAL:
+        Shortcut: imp + TAB
+        export const algo = [];
+        import { algo } from 'path donde esta algo'
+
+    EXPORT-IMPORT PARA TODO EL ARCHIVO: NO LLEVA NOMBRE, el nombre lo coloco cuando hago el import
+    export default [e1, e2, e3];    // NO LLEVA NOMBRE
+    import algo from 'path donde esta algo'
+
+    EXPORT-IMPORT MIXTO:
+        export {
+            heroes as default,
+            owners
+        }
+        import heroes, { owners } from 'path donde esta algo'
+
+    FUNCION DE CALLBACK:
+        (elemento, indice, array) => {return algo;}
+
+    FUNCIÓN FIND: Devuelve el primer elemento del array que cumple con la condición indicada por una función
+        const algo = valorQueQuieroMatchear;
+        const fCallback = (elemento) => elemento == algo; 
+        heroes.find(fCallback)
+            Devuelve el 1er ELEMENTO que cumple la condición.
+        heroes.findIndex(fCallback)
+            Devuelve el 1er INDICE que cumple la condicion => USAR CON OBJETOS, yo le digo como comparar
+
+    FUNCIÓN INDEXOF: Devuelve el índice del primer elemento exactamente igual (===) al valor buscado.
+        const variableABuscar = valor;
+        heroes.indexOf(variableABuscar)
+            Devuelve el 1er INDICE que ES IGUAL al VALOR PASADO POR PARÁMETRO.
+            const objetoHeroe = { id: 2, name: 'Spiderman', owner: 'Marvel' };
+            const indiceHeroe = heroes.indexOf(objetoHeroe);
+            console.log(indiceHeroe);   // -1 => NO EXISTE, compara REFERENCIAS porque son OBJETOS
+
+    FUNCIÓN FILTER: Devuelve un nuevo array con todos los elementos que cumplen con la condición.
+        heroes.filter((h) => h.id === id)   // [h1, h2, h3] siendo h1, h2, h3 objetos heroe que cumplen la condición
+
+    RESUMEN:
+        .filter                     !=      .find
+        Array de N Objetos o []             1 Objeto o undefined
+
+        findIndex                   !=          indexOf
+        Recibe una funcion de callback          Recibe lo que quiero buscar
+        Le digo como comparar                   Compara por valor
+        USAR CON OBJETOS                        USAR CON TIPOS BÁSICOS
+
+Symbol: sirve para crear identificadores específicos y únicos.
+
+Promises: 
+    IMPORTANTE: colocar el tipo de dato si la promesa es exitosa entre <>
+
+    const myPromise = new Promise<number>((resolve, reject) => {
+    setTimeout(() => {
+            //! Yo quiero mis 100 dolares!!
+            // resolve(100);
+
+            reject('Mi amigo se perdió');
+        }, 2000);
+    });
+
+    myPromise.then((myMoney) => {
+            console.log(`Tengo mi dinero ${myMoney}`);
+        }
+    ).catch((reason) => {
+        console.warn(reason);
+    }).finally(() => {
+            console.log('A seguir con mi vida.');
+        }
+    );
+
+    Una Promise está en uno de estos estados:
+        pending     (pendiente) : estado inicial, ni cumplido ni rechazado.
+        fulfilled   (cumplida)  : lo que significa que la operación se completó con éxito.
+        rejected    (rechazada) : lo que significa que la operación falló.
+
+        const promesa = new Promise(callback);
+            callback: funcion que se ejecuta en algún momento y se pasa por parámetro a otra función.
+
+        const callback = (resolve, reject) => {
+            // resolve  : callback que se ejecuta cuando la promesa es exitosa
+            // reject   : callback que se ejecuta cuando la promesa falla
+        };
+    
+    setTimeout: ejecuta callback cada X tiempo en milisegundos
+        setTimeout(callback, tiempoEnMs);
+
+    EJECUTAR ACCIONES cuando Promise pase de pending a fullfilled o rejected
+
+    .then       => se ejecuta si la promesa esta en estado fulfilled
+    .catch      => se ejecuta si la promesa esta en estado rejected
+    .finally    => algo que se ejecuta SI o SI despues del then/catch
+
+    IMPORTANTE: si NO UTILIZO resolve() y reject() dentro del CALLBACK de la Promise => NO VOY A CAPTAR NADA EN EL THEN ni en el CATCH
+
+    RESUMEN:
+        -resolve y reject por convención.
+        -si no invoco a resolve y reject, then y catch no atrapan nada.
+        -si quiero utilizar parametros dentro de una promesa, englobo promesa en funcion que es async
+        -Llamado: funcionAsync(parametroAMandar)
+            .then(callbackThen)
+            .catch(callbackCatch)
+            .finally(callabackFinally);
+
+        const funcionAsync = (parametroAMandar) => {
+            const callback = (resolve, reject) =>{
+                const resultado = operacion(parametroAMandar);
+                if (!resultado) {
+                    reject('Mensaje de error');
+                }
+                resolve(resultado);
+            };
+            return new Promise(callback);
+        }
+
+        ¿Que pasa si operacion puede fallar? => uso try-catch
+        const funcionAsync = (parametroAMandar) => {
+            const callback = (resolve, reject) =>{
+                try {
+                    const resultado = operacion(parametroAMandar);
+                    resolve(resultado);
+                } catch (err) {
+                    reject('Mensaje de error ' + err);
+                }
+            };
+            return new Promise(callback);
+        }
+
+    DOCUMENTACIÓN: https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+
+Giphy API: obtener gifs gratis.
+    https://developers.giphy.com/
+    1- Generar API Key y copiarla desde dashboard
+    2- Entrar a Postman
+    3- Hago un get con api_key: <clave_obtenida>
+    4- API Explorer en GIPHY
+    5- Copio URL que me generó y la pego en GET de Postman
+    6- Send => seguro obtuve 200 OK con 1 gif
+
+Fetch API:
+    fetch: es una función nativa de JavaScript (desde ES6) que se usa para hacer solicitudes HTTP/HTTPS desde el navegador.
+        Recibe 2 parametros
+            url         => string, es importante que tenga bien el HTTP o HTTPS
+            opciones    => objeto de configuración
+        RETORNA Promise
+        IMPORTANTE: ¡NO SE RECHAZA la Promise por ERRORES HTTP!, porque tuve respuesta.
+            => debo manejarlo con resp.ok o resp.status
+        
+        Ejemplo con 1 parametro[Hace GET basico por defecto]
+            fetch(url).then(resp => {
+                console.log(resp.status); // 200, 404, 500, etc.
+                console.log(resp.ok);     // true si status está entre 200 y 299
+                console.log(resp.headers); // Headers de la respuesta
+            });
+
+            Ejemplo con opciones:
+            fetch('https://api.ejemplo.com/usuarios', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer token123'
+                },
+                body: JSON.stringify({ nombre: 'Agustin' })
+            });
+
+            Propiedad	¿Qué hace?
+            method	    HTTP method: 'GET', 'POST', 'PUT', etc.
+            headers	    Cabeceras HTTP como Content-Type, Accept
+            body	    Cuerpo de la solicitud (JSON, texto, etc.)
+            mode	    'cors', 'no-cors', 'same-origin'
+            credentials	'include', 'omit', 'same-origin' (cookies)
+            cache	    Controla el caché: 'no-cache', 'reload', etc.
+    Object.values(algo) => convierte objeto de objetos en array de objetos
+
+    Otro ejemplo:
+
+    const API_KEY = 'API_KEY_REAL';
+    const URL = `https://api.giphy.com/v1/gifs/random?api_key=${API_KEY}&tag=&rating=g`
+
+    const myRequest = fetch(URL);
+
+    Promises en cadena
+        myRequest
+            .then((response) => response.json())
+            .then((data) => console.log(data))
+            .catch(console.error);
+
+Interfaces para NO usar any en OBJETOS COMPLEJOS: uso extensión Paste JSON as Code.
+    1- Creo un archivo donde va a ir la nueva interfaz. ej.: giphy.response.ts
+    2- CONTROL+ SHIFT + P
+    3- Busco Paste JSON as Code
+    4- Coloco nombre de la interfaz que quiero
+    5- Se colocó la interfaz.
+    IMPORTANTE: tengo que tener copiado el JSON en el portapapeles. NO TENGO QUE PEGARLO EN NINGÚN LADO.
+
+async-await:
+    async: clausula que automáticamente convierte el retorno en una Promise
+    await: clausula, usada dentro de una funcion async, para esperar que una promesa se resuelva antes de seguir ejecutando el código
+    ERRORES se manejan con try-catch dentro de la funcion async
+
+        const data = (await response.json()) as GiphyRandomResponse;
+        Mejorado: 
+        const {data}: GiphyRandomResponse = await response.json();
+    Más legible, desestructuro para evitar hacer data.data
+
+then-catch vs async-await:
+    Hacer .then concatenados es equivalente a tener varios await
+        [Se espera a que se resuelva un .then para resolver el siguiente]
+    Usar 1 solo .catch es quivalente al catch del try-catch en async-await
+
+Operador ternario
+    SI QUIERO AMBAS PARTES:
+    const mensaje = activo ? 'Activo' : 'Inactivo';
+    
+    QUIERO EJECUTAR SOLO 1 PARTE:
+        Como NO HACERLO
+            const mensaje = activo ? 'Activo' : null;
+        COMO HACERLO
+            const mensaje = activo && 'Activo';
+    
+    RESULTADO:
+    // Se ve por consola 'Activo' si activo es true y false si activo es false
+    console.log(mensaje);   // EQUIVALENTE => activo ? 'Activo' : false;
+
+CÓDIGO FUENTE: https://github.com/DevTalles-corp/react-ts-bases

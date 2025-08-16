@@ -1,0 +1,24 @@
+https://gist.github.com/Klerith/babd55ca1526ac882882888f75de208f
+react-cheatsheet.pdf
+
+VS Code
+Node.js => v23.10.0 o superior.
+Postman
+Warp (terminal opcional)
+Docker Desktop
+
+Extensiones de VS Code
+    Error Lens              => Errores
+    Better Comments         => Comentarios
+    ES7 React/Redux         => Snippets
+    React Simle Snippets    => Snippets
+    Auto Close Tag          => Auto cerrar etiquetas
+    Paste JSON as Code      => Para trabajar con TypeScript
+    Backticks               => Cambiar comillas normal a backticks
+
+Tema de VS Code: 
+    Tokyo Night
+    Bearded Icons
+
+Wallpapers Developer
+    https://drive.google.com/drive/folders/1ItU8rbSGJjnh2USOBGwaCo9nYKifPJ6m
