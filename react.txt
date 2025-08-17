@@ -1,0 +1,170 @@
+npm create vite
+first-steps
+React
+TypeScript+SWC
+cd first-steps
+npm install
+npm run dev
+
+HMR: hot module replace => algo que hace vite
+
+<></> => Fragment: agrupo elementos sin modificar HTML.
+    React.Fragment es la nomenclatura interna que tiene pero no se escribe. Ya no se usa así.
+
+IMPORTANTE: se puede importar React en el tag head del HTML con el tag script.
+    Funciona de una manera equivalente a anclarlo en un HTML e invocar al render desde el main.tsx
+
+SWC: Speedy Web Compiler => reemplaza a Babel. Transpila más rápido.
+El proyecto levantado en Vite corre sobre Node.js
+
+vite.config.ts  => le digo a vite que trabajo con React. Se hacen configuraciones de vite.
+tsconfig    => le digo a TypeScript que tan estricto debe ser.
+    En TypeScript puro, en React y en Node.
+
+dependencies    => van al bundle final de producción. Son dependencias de producción.
+devDependencies => NO van a producción. Son dependencias de desarrollo.
+index.HTML  => titulo de app [head], donde va a anclarse la app y el punto de entrada a la app [body].
+eslint.config.js    => verifica código escrito en TSX. Da errores que son útiles.
+
+public  => coloco recursos estáticos
+    imagenes
+    fuentes
+    etc
+src     => donde estructuro la app de React
+    assets  => imagenes
+    main.tsx    => punto de entrada de la App
+
+vite-env.d.ts   => variables de entorno de vite
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <h1>Hola Mundo</h1>
+  </StrictMode>
+)
+Renderiza los componentes en el div al cual hace referencia con el id 'root'
+
+<StrictMode></StrictMode>
+    -Detecta efectos secundarios inseguros
+    -Vuelve a ejecutar algunos ciclos de vida y efectos (useEffect, useLayoutEffect) para asegurarse de que tu código no dependa de que se ejecuten solo una vez.
+    -Marca APIs obsoletas
+    -Avisa en consola si usas métodos de ciclo de vida antiguos o que serán eliminados.
+    -Comprueba claves en listas
+    -Muestra advertencias si olvidas poner key en elementos renderizados con .map.
+    -Resalta problemas de renderizado
+    -Hace render doble (solo en desarrollo) de los componentes de función para detectar si la lógica no es "pura" (ejemplo: mutaciones inesperadas, código con side-effects dentro del render).
+    -Advierte sobre contextos inseguros
+    -Señala usos problemáticos con el Context API o referencias que podrían romperse.
+
+    IMPORTANTE: No rompe nada en producción => en el build final no hace render doble ni logs extra.
+    IMPORTANTE: El propósito es pedagógico  => obliga a escribir componentes más robustos y predecibles.
+
+Impresión de variables  => deben ser de tipo ReactNode
+    - variables [IMPORTANTE: boolean no se muestra]
+    - código JS
+    - ternario
+    IMPORTANTE: para objetos    => <p>{JSON.stringify(myObject)}</p>
+    IMPORTANTE: para arrays     => <p>{myArray.join(', ')}</p>
+
+    const firstName = 'Agustín';
+    <>
+        {firstName}
+    </>
+
+IMPORTANTE: File -> Preferences -> Settings -> Buscar 'format on save' y tildar el check
+
+Colocar estilos de CSS  => como es JSX no es como CSS puro, debo usar camelCase y se coloca un objeto con las props y los valores dentro de unas llaves.
+    <p
+        styles={    {
+            backgroundColor: 'red',
+            borderRadius: isActive ? 10 : 20,
+            padding: 10
+        }  }
+    >
+    </p>
+
+Protip: DECLARAR EN UNA VARIABLE los estilos FUERA DEL COMPONENTE y definirle el tipo CSSProperties para tener Intellisense
+    ej.: 
+        const myStyles: CSSProperties = {
+            backgroundColor: 'red',
+            borderRadius: isActive ? 10 : 20,
+            padding: 10
+        };
+
+    styles puede recibir React.CSSProperties | undefined
+
+IMPORTANTE: nomenclatura para directorios   => kebak-case
+IMPORTANTE: nomenclatura para componentes   => PascalCase
+IMPORTANTE: shortcut para crear componentes => rafc + TAB
+
+Props: valores o funciones que reciben los componentes. Deben ser inmutables.
+
+Renderizar N cantidad de componentes del mismo tipo.
+    1- Defino interface
+    interface ItemInCart {
+        productName: string;
+        quantity: number;
+    };
+
+    2- Defino array de objetos del tipo de la interface.
+    const itemsInCart: ItemInCart[] = [
+        { productName: 'Nintendo Switch 2', quantity: 1 },
+        { productName: 'Pro Controller', quantity: 2 },
+        { productName: 'Super Smash', quantity: 5 },
+    ];
+
+    3- Renderizado con map. 
+        IMPORTANTE: usar desestructuración si tengo hasta 3 props => sino usar la nomenclatura tradicional
+    {itemsInCart.map(({ productName, quantity }) => <ItemCounter key={productName} name={productName} quantity={quantity} />)}
+
+    4- Colocar KEY único a cada item a renderizar para el manejo adecuado del Virtual DOM
+        IMPORTANTE: NO USAR EL ÍNDICE. ej.: puedo usar el productName
+        key={productName}
+    
+Eventos de los elementos
+    onClick: manejo de evento de click en boton
+        recibe callback(event) => console.log(event);   // me dice toda la info del MouseEvent
+    onMouseEnter: manejar evento de cuando paso el cursor encima. Útil para hacer drag and drop
+
+IMPORTANTE: NO DEBO colocar lógica en el componente que tiene la vista a devolver
+
+Hook: son funciones que permiten a los componentes usar estados y otras funciones de React
+    useState: maneja un estado local en el componente. Se usa cuando necesito redibujar algo.
+
+    REGLAS DE LOS Hook:
+    - SIEMPRE llama a los Hooks en el mismo órden   => NO USAR EN if, for y while.
+    - SOLO usarlos en componentes funcionales.
+    - Debe comenzar con la nomenclatura 'useAlgo'
+
+    const [valor, setValor] = useState(valorInicial);
+
+IMPORTANTE: re-renders se dan por cambios en PROPS o States
+
+Archivos CSS:
+    .css
+    1- Crear un archivo de estilos a la altura del componente
+        ej.: ItemCounter.css
+    2- Escribir código de estilos con la sintaxis de CSS, ya no más con TSX
+        IMPORTANTE: flex, center, etc   => no llevan comillas como en TSX
+
+    3- Importarlo
+        ÓRDEN RECOMENDADO:
+        1° React
+        2° Terceros
+        3° Mis imports
+        4° Estilos
+            .css
+                ej.: import './ItemCounter.css'
+            .module.css
+                ej.: import styles from './ItemCounter.module.css';
+    4- Colocar al componente className
+        ej.: className="item-row"
+    
+IMPORTANTE: los archivos .css TIENEN ALCANCE GLOBAL y puede haber colisiones de estilos => usar module  => tiene alcance local a donde lo importo
+    .module.css
+    5- Para usar module:
+        ej.: 
+        <section className={styles['item-row']}>
+        IMPORTANTE: si el nombre de una clase en el module.css tiene '-'    => debo usar [], de lo contrario, puedo usar '.'
+            ej.: styles.red
+
+CÓDIGO FUENTE: https://github.com/DevTalles-corp/react-ts-bases
