@@ -5,7 +5,7 @@ interface ItemInCart {
     quantity: number;
 };
 
-const itemsInCart: ItemInCart[] = [
+export const itemsInCart: ItemInCart[] = [
     { productName: 'Nintendo Switch 2', quantity: 1 },
     { productName: 'Pro Controller', quantity: 2 },
     { productName: 'Super Smash', quantity: 5 },

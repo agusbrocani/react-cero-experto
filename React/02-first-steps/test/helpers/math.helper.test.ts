@@ -5,6 +5,7 @@ import {
 } from 'vitest'
 import {
     add,
+    divide,
     multiply,
     subtract
 } from '../../src/helpers/math.helper'
@@ -72,5 +73,17 @@ describe('multiply', () => {
 
         //! Assert
         expect(result).toBe(a * b);
+    });
+
+    test('should divide two positives numbers', () => {
+        //! Arrange
+        const a = 4;
+        const b = 2;
+
+        //! Act
+        const result = divide(a, b);
+
+        //! Assert
+        expect(result).toBe(a / b);
     });
 });
