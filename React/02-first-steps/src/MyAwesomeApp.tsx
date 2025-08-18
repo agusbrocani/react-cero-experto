@@ -1,9 +1,12 @@
+const firstName = 'Agustín';
+const lastName = 'Brocani';
+
 const MyAwesomeApp = () => {
     return (
-        <>
-            <h1>Agustín</h1>
-            <h3>Brocani</h3>
-        </>
+        <div data-testid="div-app">
+            <h1 data-testid="first-name-title">{firstName}</h1>
+            <h3>{lastName}</h3>
+        </div>
     );
 };
 

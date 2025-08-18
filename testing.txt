@@ -1,0 +1,166 @@
+NO SON UNA PÉRDIDA DE TIEMPO    
+    - Garantizan la calidad
+    - Detectan errores
+    - Facilitan el mantenimiento
+    - Aceleran el desarrollo con integraciones continuas (CI/CD)
+    - Despliegues seguros
+    Si me regalan un auto sin probar, ¿lo usaria?
+        NO
+
+Tipos de pruebas
+    - Unitarias         : enfocadas en partes atómicas
+    - Integración       : ¿cómo reaccionan varias piezas en conjunto?
+    - End to End (E2E)  : ejecutan todo un flujo contínuo como si fuera el proceso que realizaría el usuario
+
+Pruebas Unitarias
+    - atómicas simples
+    - no tener dependencias de otros componentes
+    - debe ser especializada en lo que quiero probar
+
+Pruebas de integración
+    - ¿Cómo funcionan elementos en conjunto?
+    - No deben de ser mayores a las unitarias
+
+E2E
+    - ejecutan un flujo aislado
+        ej.: compra de un producto
+    - objetivo específico
+    - pruebas de casos improbables
+
+Características de las pruebas automáticas
+    - fácil de escribir
+    - fácil de leer
+    - rápidas
+    - flexibles
+    - principalmente unitarias
+
+Triple A    => forma de estructurar los test
+    - Arrange   => arreglar. Dejar todo listo para hacer algo con el sujeto de pruebas
+        - importaciones
+        - inicializaciones
+    - Act       => actuar
+        - aplicar estímulos
+        - llamar métodos y funciones
+        - simular clicks
+    - Assert    => afirmar
+        - ¿qué tuvo que suceder con el estímulo aplicado?   => comparo obtenido vs esperado
+    
+Mitos
+    Hacen la app más lenta
+        FALSO => se ejecuta separado
+    Las pruebas NO pueden fallar
+        FALSO => pueden dar falsos positivos o falsos negativos
+    Hacen más lenta mi app
+        FALSO => código de los test NO llegan a producción. Paso anterior a build de prod
+    Es un pérdida de tiempo
+        FALSO => tienen muchos beneficios
+    Hay que probar todo
+        FALSO => hay que testear las rutas críticas en principio, si hay tiempo, lo demás
+
+Coverage: que tanto porcentaje del código fue testeado.
+    Cobertura de líneas         : porcentaje de líneas ejecutadas
+    Cobertura de ramas          : porcentaje de ramas de decisión probadas
+    Cobertura de funciones      : porcentaje de funciones/métodos invocados
+    Cobertura de condiciones    : porcentaje de condiciones evaluadas en ambos sentidos
+
+IMPORTANTE: https://vitest.dev/
+npm install -D vitest
+Ir a package.json y agregar
+    "scripts": {
+        "test": "vitest",
+        "test:ui": "vitest --ui",
+        "coverage": "vitest run --coverage"
+    }
+
+Test de 02-first-steps
+    Crear carpeta helpers dentro de src
+        Crear archivo math.helper.ts
+            Crear funciones add, subtract, multiply y divide
+    Crear carpeta test a la misma altura que src
+        Crear carpeta helpers dentro de test
+
+Test suit === archivo .test.ts
+IMPORTANTE: los archivos de test deben llamarse mismoNombre.test.ts
+import {test} from 'vitest'
+
+Si un TEST FALLA => o falló código o falló test. DEPENDE que cambió
+
+IMPORTANTE: primero DEBO EJECUTAR npm test y luego PUEDO EJECUTAR npm run build => ahora puedo hacer deploy
+
+Testing Library: recrear interacciones sobre los componentes de React
+    Me permite montar el componente y ver lo que renderiza
+    IMPORTANTE: https://testing-library.com/
+    Frameworks -> React Testing Library -> Introduction -> With TypeScript
+    npm install --save-dev @testing-library/react @testing-library/dom @types/react @types/react-dom
+    En el archivo del test:
+        import {
+            render
+        } from '@testing-library/react';
+
+        Ir a vite.config.ts
+            Cambiar: 
+                import { defineConfig } from 'vite' 
+                    por 
+                import { defineConfig } from 'vitest/config'
+            Agregar después de plugins: [react()]
+                , test: {
+                    environment: 'jsdom',
+                    globals: true,
+                }
+        CONTROL + C
+        Ejecuto npm test
+        yes => Instalo dependencia 
+        npm test
+        Ya puedo utilizar render en el test => DESESTRUCTURO lo que necesito
+
+    document.body       => este va a ser el DOM donde voy a renderizar cosas, equivalente al div de id root del HTML real
+
+    const { container } = render(<MyAwesomeApp />);
+    container.innerHTML => todo lo que renderiza el componente
+
+    Ver el HTML donde se renderizó mi componente a testear
+        render(<MyAwesomeApp />);
+        screen.debug();
+
+Buscar elementos en el componente renderizado
+    Test con container
+        0- Desestructuro container de componente utilizando el método render
+            const { container } = render(<MyAwesomeApp />);
+        1- Creo los tags que voy a buscar
+            const h1 = container.querySelector('h1');
+        
+        2- Assert
+            toBe: compara por igualdad estricta con tipos básicos
+            expect(h1?.innerHTML).toBe('Agustín');
+                h1?.innerHTML => TODO EL TEXTO que está dentro del tag h1 del componente del cual desestructuré container
+            toContain: si el tipo enviado por parametro ESTA INCLUIDO da true
+            // toContain: assert que da TRUE si contiene PARTE DEL TEXTO enviado por párametro
+            expect(h1?.innerHTML).toContain('Agustín');
+        
+    IMPORTANTE: si ocurre algun evento, el container NO SE ACTUALIZA, a diferencia del screen
+
+    Test con screen
+        En el componente a testear agregar:
+            <h1 data-testid="first-name-title">{firstName}</h1>
+            IMPORTANTE: NO es muy buena práctica
+        En el test:
+                render(<MyAwesomeApp />);
+                screen.debug();
+                const h1 = screen.getByTestId('first-name-title');
+                expect(h1.innerHTML).toContain('Agustín');
+                // NO necesariamente es h1, puede ser cualquier tag, porque le puse un identificador
+
+Snapshots: quiero verificar que el HTML (estructura física) NO CAMBIE.
+    RECORDAR: eso es una penalización en el SEO.
+    Es una foto del componente renderizado en un instante determinado.
+
+    test('should match snapshot', () => {
+        const { container } = render(<MyAwesomeApp />);
+        expect(container).toMatchSnapshot();
+    });
+    LUEGO => se crea un archivo NombreDelComponente.test.tsx.snap en el directorio '__snapshots__' dentro de la carpeta test
+    IMPORTANTE: DEBO actualizar snapshots si cambié la estructura del return del componente
+    IMPORTANTE: usar snapshort SOLO si el componente NO VA A CAMBIAR a lo largo del tiempo
+
+IMPORTANTE: PROBAR de mi más fácil a lo más complejo
+
