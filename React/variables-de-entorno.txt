@@ -1,0 +1,8 @@
+1- Crear un archivo .env en root del proyecto
+2- Escribir en el archivo:
+    // Comentario con url del sitio donde obtuve API KEY
+    VITE_GIPHY_API_KEY = 'MI_KEY'
+3- Agregar al .gitignore el .env
+4- Crear un .env.template CON LO MISMO que el .env QUITANDO la key real, solo dejo la variable y el comentario con la url
+5- En la request de Axios poner
+    api_key: import.meta.env.VITE_GIPHY_API_KEY como prop en params

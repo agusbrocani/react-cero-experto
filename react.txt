@@ -168,3 +168,25 @@ IMPORTANTE: los archivos .css TIENEN ALCANCE GLOBAL y puede haber colisiones de 
             ej.: styles.red
 
 CÓDIGO FUENTE: https://github.com/DevTalles-corp/react-ts-bases
+
+Hook useEffect: ejecutar efectos secundarios y limpieza al desmontar el componente.
+    Debounce: cuando la persona deja de escribir X cantidad de tiempo, emito el valor.
+    
+    ej.:
+    useEffect(() => {
+        // Debounce
+        const timeoutId = setTimeout(() => {
+            onQuery(query);
+        }, 700);
+
+        // Función de limpieza
+        return () => {
+            // Cancela el temporizador antes de que pasen las 700 milésimas
+            clearTimeout(timeoutId);
+        };
+    }, [query, onQuery]);
+
+    IMPORTANTE: como el useEffect vigila cambios TODO el tiempo, si cambió el state antes de los 700 ms => ejecuté el return y cancelé el onQuery.
+        ESTA ENTRANDO OTRA VEZ PORQUE CAMBIO query, no onQuery.
+
+IMPORTANTE: https://github.com/DevTalles-corp/react-ts-gifs/tree/fin-seccion-06

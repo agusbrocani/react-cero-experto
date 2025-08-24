@@ -1,47 +1,59 @@
-import { mockGifs } from "./mocks-data/gifs.mock"
+import { useState } from "react";
+import PreviousSearches from "./gifs/components/PreviousSearches";
+import GifsList from "./gifs/GifsList";
+import CustomHeader from "./shared/components/CustomHeader";
+import SearchBar from "./shared/components/SearchBar";
+import { getGifsByQuery } from "./gifs/actions/get-gifs-by-query.action";
+import type { Gif } from "./gifs/interfaces/gif.interface";
 
 const GifsApp = () => {
+    const [previousTerms, setPreviousTerms] = useState<string[]>([]);
+    const [gifs, setGifs] = useState<Gif[]>([]);
+
+    const handleTermClicked = (term: string) => {
+        console.log({ term });
+    };
+
+    const handleSearch = async (query: string = '') => {
+        query = query.trim().toLowerCase();
+
+        if (query.length === 0) return;
+
+        if (previousTerms.includes(query)) return;
+
+        setPreviousTerms([query, ...previousTerms].splice(0, 8));
+
+        const gifs = await getGifsByQuery(query);
+        setGifs(gifs);
+    };
+
     return (
         <>
             {/* Header */}
-            <div className="content-center">
-                <h1>Buscador de Gifs</h1>
-                <p>Descubre y comparte el gif perfecto</p>
-            </div>
+            <CustomHeader
+                title="Buscador de Gifs"
+                description="Descubre y comparte el gif perfecto"
+            />
 
             {/* Search */}
-            <div className="search-container">
-                <input type="text" placeholder="Buscar gifs" />
-                <button>Buscar</button>
-            </div>
+            <SearchBar
+                placeholder="Buscar gifs"
+                buttonName="Buscar"
+                onQuery={(query: string) => handleSearch(query)}
+            />
 
             {/* Búsquedas previas */}
-            <div className="previous-searches">
-                <h2>Búsquedas previas</h2>
-                <ul className="previous-searches-list">
-                    <li>Goku</li>
-                    <li>Saitama</li>
-                    <li>Goku</li>
-                    <li>Eldeng Ring</li>
-                </ul>
-            </div>
+            <PreviousSearches
+                searches={previousTerms}
+                onLabelClicked={handleTermClicked}
+            />
 
-            {/* Búsquedas previas */}
-            <div className="gifs-container">
-                {
-                    mockGifs.map((gif) => (
-                        <div key={gif.id} className="gif-card">
-                            <img src={gif.url} alt={gif.title} />
-                            <h3>{gif.title}</h3>
-                            <p>
-                                {gif.width}x{gif.height} (1.5mb)
-                            </p>
-                        </div>
-                    ))
-                }
-            </div>
+            {/* Gifs */}
+            <GifsList
+                gifs={gifs}
+            />
         </>
     )
 }
 
-export default GifsApp
+export default GifsApp;

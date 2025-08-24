@@ -1,0 +1,11 @@
+Axios: cliente para hacer peticiones HTTP
+
+npm install axios
+import axios from 'axios';
+
+Crear en gifs
+    => Directorio action
+        => get-gifs-by-query-actions.ts
+    => directorio interfaces
+    => directorio api
+        => giphy.api.ts => va a tener conexión de axios al endpoint al que le pega
