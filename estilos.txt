@@ -1,0 +1,12 @@
+https://gist.github.com/Klerith/78df674c84d833d28d5c06359b04fc75
+
+FUENTE: https://fonts.google.com/specimen/Montserrat+Alternates
+
+Get font -> Get embed code
+
+Seleccionar:
+    Ligth 300
+    Regular 400
+    Bold 700
+
+Copiar tags link de HTML y pegarlos en  el head del index.html al final
