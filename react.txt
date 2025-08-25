@@ -190,3 +190,9 @@ Hook useEffect: ejecutar efectos secundarios y limpieza al desmontar el componen
         ESTA ENTRANDO OTRA VEZ PORQUE CAMBIO query, no onQuery.
 
 IMPORTANTE: https://github.com/DevTalles-corp/react-ts-gifs/tree/fin-seccion-06
+
+Custom Hook: separar lógica de negocio de componente vista.
+    1- Crear un directorio llamado hooks dentro del componente en donde lo voy a crear
+    2- Llamarlo useAlgo.tsx
+    3- Definir el retorno de mi hook. Si va a devolver un array, un objeto, etc.
+    IMPORTANTE: Debe seguir las reglas de los hooks.
