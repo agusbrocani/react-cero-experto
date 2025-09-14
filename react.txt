@@ -196,3 +196,7 @@ Custom Hook: separar lógica de negocio de componente vista.
     2- Llamarlo useAlgo.tsx
     3- Definir el retorno de mi hook. Si va a devolver un array, un objeto, etc.
     IMPORTANTE: Debe seguir las reglas de los hooks.
+
+useRef: referencia mutable que NO CAUSA re-render
+
+IMPORTANTE: https://github.com/DevTalles-corp/react-ts-gifs/tree/fin-seccion-07

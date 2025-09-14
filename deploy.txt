@@ -1,0 +1,13 @@
+Manera 1:
+https://www.npmjs.com/package/http-server/
+Monstar server web estáticos
+
+npm install --global http-server
+
+Manera 2:
+https://www.netlify.com/
+1- Hacer npm run build ycorregir los errores
+2- Arrastrar la carpeta dist
+
+Acceder al sitio generado:
+    https://gifs-app-ab.netlify.app/

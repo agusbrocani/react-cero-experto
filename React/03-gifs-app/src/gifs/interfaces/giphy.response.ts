@@ -101,18 +101,11 @@ export interface Looping {
     mp4: string;
 }
 
-export enum Rating {
-    G = "g",
-    PG = "pg",
-}
+export type Rating = 'G ' | 'PG';
 
-export enum TrendingDatetimeEnum {
-    The00000000000000 = "0000-00-00 00:00:00",
-}
+export type TrendingDatetimeEnum = '0000-00-00 00:00:00';
 
-export enum Type {
-    GIF = "gif",
-}
+export type Type = 'gif';
 
 export interface User {
     avatar_url: string;
@@ -127,12 +120,7 @@ export interface User {
     is_verified: boolean;
 }
 
-export enum Username {
-    Empty = "",
-    Funimation = "funimation",
-    LnrMotion = "lnr_motion",
-}
-
+export type Username = "" | "funimation" | "lnr_motion";
 export interface Meta {
     status: number;
     msg: string;
